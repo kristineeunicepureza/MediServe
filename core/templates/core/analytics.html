@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR (Admin Red Theme) #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'admin_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #f7f9fa;
+                    color: #dc3545;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 style="font-size: 1.5em; color: #36489e;">Sales & Inventory Analytics</h1>
+            </div>
+
+            <button class="btn" style="background-color: #ffc107; color: #333; padding: 10px 15px; font-weight: 500;">
+                <i class="fas fa-download"></i> Generate Report
+            </button>
+        </header>
+
+        {# MAIN CONTENT AREA #}
+        <main style="padding: 40px;">
+            <p style="color: #555; margin-bottom: 30px;">Data visualizations and key performance indicators.</p>
+
+            {# KPI CARDS #}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; margin-bottom: 40px;">
+                <div style="border: 1px solid #28a745; padding: 20px; border-radius: 8px; text-align: center; background-color: #f7fff7;">
+                    <p style="font-weight: 600; margin-top: 0; color: #333;">Last Month Sales</p>
+                    <strong style="color: #28a745; font-size: 2.5em; margin-bottom: 5px;">₱{{ monthly_sales|last|floatformat:2 }}</strong>
+                </div>
+                <div style="border: 1px solid #007bff; padding: 20px; border-radius: 8px; text-align: center; background-color: #f7f9ff;">
+                    <p style="font-weight: 600; margin-top: 0; color: #333;">Top Seller Units Sold</p>
+                    <strong style="color: #007bff; font-size: 2.5em; margin-bottom: 5px;">{{ top_sellers|first.count }}</strong>
+                </div>
+            </div>
+
+            <h3 style="color: #dc3545; margin-bottom: 15px; border-bottom: 2px solid #ffc107; padding-bottom: 5px;">Top Selling Items</h3>
+
+            {# TOP SELLERS TABLE #}
+            <table style="width: 100%; border-collapse: collapse; text-align: left; background-color: #FFFFFF;">
+                <thead>
+                    <tr style="background-color: #f0f0f0;">
+                        <th style="padding: 10px 15px; color: #333;">Medicine</th>
+                        <th style="padding: 10px 15px; color: #333; text-align: right;">Units Sold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in top_sellers %}
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 12px 15px; color: #36489e;">{{ item.name }}</td>
+                            <td style="padding: 12px 15px; color: #555; text-align: right; font-weight: bold;">{{ item.count }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {# CHART PLACEHOLDER #}
+            <div style="margin-top: 40px; border: 2px dashed #ccc; padding: 50px; text-align: center; background-color: #fcfcfc; border-radius: 8px;">
+                [Placeholder: Interactive Sales and Inventory Chart/Graph]
+            </div>
+        </main>
+    </div>
+{% endblock %}

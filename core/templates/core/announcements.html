@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Barangay Announcements{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'main_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #f7f9fa;
+                    color: #36489e;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 style="font-size: 1.5em; color: #36489e;">Official Announcements</h1>
+            </div>
+
+            {# ADMIN ACTION BUTTON INTEGRATED #}
+            {% if is_admin %}
+                <button onclick="document.getElementById('add-post-form').style.display='block'"
+                        class="btn"
+                        style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px;">
+                    <i class="fas fa-plus"></i> Add New Post
+                </button>
+            {% endif %}
+        </header>
+
+        {# MAIN ANNOUNCEMENT LIST CONTENT #}
+        <main style="padding: 30px;">
+            <p style="color: #555; margin-bottom: 30px;">Important notices from the Barangay and MediServe.</p>
+
+            <div class="announcement-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+                {% for post in announcements %}
+                    <div class="announcement-card" style="
+                        background-color: #f7f9fa;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border: 1px solid #e0e0e0;
+                        position: relative;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                    ">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong style="font-size: 1.2em; color: #dc3545;">{{ post.title }}</strong>
+                            <small style="color: #777;">Posted: {{ post.date }}</small>
+                        </div>
+
+                        <p style="margin: 0; color: #333;">{{ post.content }}</p>
+
+                        {# ADMIN EDIT BUTTON INTEGRATED #}
+                        {% if is_admin %}
+                            <div style="position: absolute; top: 10px; right: 10px;">
+                                <button onclick="document.getElementById('edit-post-{{ forloop.counter }}').style.display='block'"
+                                        class="btn-secondary"
+                                        style="background-color: #ffc107; color: #333; padding: 5px 10px; font-size: 0.8em; border: none;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </div>
+
+                            {# EDIT MODAL POPUP #}
+                            <div id="edit-post-{{ forloop.counter }}" style="display: none; position: fixed; background-color: #fff; border: 1px solid #ccc; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 30; top: 20%; left: 30%; width: 400px; text-align: left;">
+                                <form action="{% url 'edit_post' post_id=forloop.counter %}" method="post">
+                                    {% csrf_token %}
+                                    <h4 style="color: #36489e;">Edit Announcement</h4>
+                                    <input type="text" name="title" value="{{ post.title }}" required style="margin-bottom: 10px; width: 100%;">
+                                    <textarea name="content" rows="5" required style="margin-bottom: 15px; width: 100%;">{{ post.content }}</textarea>
+
+                                    <button type="submit" class="btn" style="background-color: #36489e; color: #FFFFFF; padding: 10px 20px;">Save Changes</button>
+                                    <button type="button" onclick="document.getElementById('edit-post-{{ forloop.counter }}').style.display='none'" class="btn-secondary" style="margin-top: 5px; color: #333;">Close</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
+                        No announcements posted yet.
+                    </p>
+                {% endfor %}
+            </div>
+        </main>
+
+        {# ADMIN ADD POST MODAL (Full page overlay) #}
+        {% if is_admin %}
+            <div id="add-post-form" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 50;">
+                <div style="background-color: #fff; padding: 30px; border-radius: 10px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; text-align: left;">
+                    <form action="{% url 'add_post' %}" method="post">
+                        {% csrf_token %}
+                        <h3 style="color: #36489e; margin-bottom: 20px;">New Announcement Post</h3>
+                        <label for="post-title">Title:</label>
+                        <input type="text" id="post-title" name="title" placeholder="Title" required style="margin-bottom: 15px; width: 100%;">
+
+                        <label for="post-content">Content:</label>
+                        <textarea id="post-content" name="content" placeholder="Content" rows="7" required style="margin-bottom: 25px; width: 100%;"></textarea>
+
+                        <button type="submit" class="btn" style="background-color: #36489e; color: #FFFFFF; padding: 10px 20px;">Submit Post</button>
+
+                        <button type="button" onclick="document.getElementById('add-post-form').style.display='none'" class="btn-secondary" style="margin-top: 10px; color: #333;">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

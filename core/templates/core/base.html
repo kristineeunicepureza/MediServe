@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>{% block title %}MediServe{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    <style>
+        .admin-action-hover {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .admin-item-row:hover .admin-action-hover {
+            display: block;
+        }
+
+        .dark-mode { background-color: #333; color: white; }
+        .dark-mode .left-panel { background-color: #444; color: white; }
+        .dark-mode .right-panel { background-color: #222; color: white; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea { background-color: #555; color: white; border: 1px solid #666; }
+    </style>
+</head>
+<body>
+
+    {% if messages %}
+    <ul class="messages-container" style="position: fixed; top: 10px; right: 10px; z-index: 1000; list-style: none; padding: 0; margin: 0;">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="padding: 10px 20px; margin-bottom: 5px; border-radius: 5px; font-weight: bold;
+                {% if 'success' in message.tags %}background-color: #28a745; color: white;
+                {% elif 'error' in message.tags %}background-color: #dc3545; color: white;
+                {% else %}background-color: #ffc107; color: #333;{% endif %}"
+            >
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Medicine Stock Management{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between;">
+
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'admin_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #f7f9fa;
+                    color: #dc3545;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 style="font-size: 1.5em; color: #dc3545;">Medicine Stock</h1>
+            </div>
+
+            <button class="btn" style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px; font-weight: 500;">
+                <i class="fas fa-plus"></i> Add New Medicine
+            </button>
+        </header>
+
+        {# MAIN CONTENT AREA #}
+        <main style="padding: 40px;">
+            <p style="color: #555; margin-bottom: 30px;">Inventory overview. Stock levels are color-coded (Green: >50, Yellow: 10-50, Red: <10).</p>
+
+            <div class="stock-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+                {% for medicine in medicines %}
+                    {% with stock=medicine.stock_quantity %}
+                    {% if stock > 50 %}
+                        {% with color='#28a745' %}
+                    {% elif stock > 10 %}
+                        {% with color='#ffc107' %}
+                    {% else %}
+                        {% with color='#dc3545' %}
+                    {% endif %}
+
+                    <div class="stock-item admin-item-row" style="
+                        background-color: #FFFFFF;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border: 1px solid #ddd;
+                        border-left: 5px solid {{ color }}; /* Color-coded stock indicator */
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                        display: flex; justify-content: space-between; align-items: center;
+                    ">
+
+                        <div style="flex-grow: 1;">
+                            <strong style="font-size: 1.2em; color: #36489e;">{{ medicine.name }} ({{ medicine.dosage }})</strong>
+                            <p style="font-size: 0.9em; color: #777; margin: 0;">Price: ₱{{ medicine.price|floatformat:2 }}</p>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <strong style="font-size: 1.5em; color: {{ color }};">
+                                {{ medicine.stock_quantity }}
+                            </strong>
+
+                            <a href="{% url 'edit_medicine' medicine_id=medicine.id %}" class="btn" style="background-color: #ffc107; color: #333; padding: 8px 15px;">
+                                <i class="fas fa-edit"></i> Edit Stock
+                            </a>
+                        </div>
+                    </div>
+                    {% endwith %}{% endwith %}
+                {% empty %}
+                    <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
+                        No medicines currently in inventory.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </main>
+    </div>
+{% endblock %}

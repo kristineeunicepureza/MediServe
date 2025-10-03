@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Admin Delivery Control{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR (Admin Red Theme) #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between;">
+
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'admin_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #f7f9fa;
+                    color: #dc3545;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 style="font-size: 1.5em; color: #36489e;">Orders in Processing & Shipping</h1>
+            </div>
+
+            <button class="btn" style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px; font-weight: 500; cursor: not-allowed;">
+                <i class="fas fa-plus"></i> Assign New Driver
+            </button>
+        </header>
+
+        {# MAIN CONTENT AREA #}
+        <main style="padding: 40px;">
+            <p style="color: #555; margin-bottom: 30px;">Use the controls below to manage order fulfillment and update status.</p>
+
+            <div class="order-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 20px;">
+
+                {% for order in orders %}
+                    <div class="order-tracking-card" style="
+                        background-color: #FFFFFF;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border: 1px solid #ffc107; /* Highlight card border for active processing */
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                    ">
+
+                        {# ORDER INFO #}
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+
+                            <div style="flex-grow: 1;">
+                                <strong style="font-size: 1.4em; color: #36489e;">Order #{{ order.id }}</strong>
+                                <p style="font-size: 0.9em; color: #777; margin: 0;">Customer: {{ order.user.username }}</p>
+                                <strong style="font-size: 1.1em; color: #dc3545;">Total: ₱{{ order.total_price|floatformat:2 }}</strong>
+                            </div>
+
+                            {# STATUS BADGE #}
+                            <span style="font-weight: bold; font-size: 1em; padding: 5px 10px; border-radius: 4px;
+                                color: #FFFFFF;
+                                background-color: {% if order.status == 'Shipped' %}#007bff{% else %}#ffc107{% endif %};
+                            ">
+                                {{ order.status|upper }}
+                            </span>
+                        </div>
+
+                        {# ACTION BUTTONS #}
+                        <form method="post" action="{% url 'delivery_page' %}" style="margin: 0; display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                            <button type="submit" name="action" value="ship" class="btn" style="background-color: #007bff; color: #FFFFFF; padding: 10px 15px; flex-grow: 1;">
+                                <i class="fas fa-shipping-fast"></i> Mark Shipped
+                            </button>
+
+                            <button type="submit" name="action" value="complete" class="btn" style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px; flex-grow: 1;">
+                                <i class="fas fa-check-double"></i> Mark Completed
+                            </button>
+                        </form>
+
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
+                        No orders currently in the queue for processing or delivery.
+                    </p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+{% endblock %}

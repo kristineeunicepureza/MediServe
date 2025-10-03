@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}User Registration{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 950px; margin: 0 auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); display: flex; overflow: hidden;">
+
+        {# LEFT PANEL: Registration Form (Dominant size) #}
+        <div style="flex: 0.7; background-color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h2 style="color: #36489e; margin-bottom: 25px;">Register New Account</h2>
+
+            <form method="post" enctype="multipart/form-data" style="width: 100%; max-width: 650px;">
+                {% csrf_token %}
+
+                {# Authentication Details #}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+
+                {# Personal Details #}
+                <div style="display: grid; grid-template-columns: 1fr 1fr 0.5fr; gap: 15px; margin-bottom: 15px;">
+                    <input type="text" name="first_name" placeholder="First Name" required>
+                    <input type="text" name="last_name" placeholder="Last Name" required>
+                    <input type="text" name="middle_initial" placeholder="M.I." maxlength="1">
+                </div>
+
+                {# Demographic Details #}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                    <input type="date" name="date_of_birth" title="Date of Birth" required>
+                    <select name="sex" required>
+                        <option value="">Select Sex</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <h4 style="color: #36489e; margin: 15px 0 10px 0; text-align: left;">Upload Optional IDs (for verification):</h4>
+
+                {# ID Uploads #}
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; text-align: left;">
+                    <label for="senior_citizen_id" style="font-weight: 500;"><i class="fas fa-id-card"></i> Senior Citizen ID (Image or PDF)</label>
+                    <input type="file" id="senior_citizen_id" name="senior_citizen_id" accept="image/*,.pdf">
+
+                    <label for="pwd_id" style="font-weight: 500; margin-top: 10px;"><i class="fas fa-wheelchair"></i> PWD ID (Image or PDF)</label>
+                    <input type="file" id="pwd_id" name="pwd_id" accept="image/*,.pdf">
+
+                    <label for="barangay_id" style="font-weight: 500; margin-top: 10px;"><i class="fas fa-home"></i> Barangay ID (Image or PDF)</label>
+                    <input type="file" id="barangay_id" name="barangay_id" accept="image/*,.pdf">
+                </div>
+
+                <button type="submit" class="btn" style="background-color: #5c74e3; padding: 15px 0; width: 100%;">
+                    <i class="fas fa-check"></i> Complete Registration
+                </button>
+            </form>
+        </div>
+
+        {# RIGHT PANEL: Login Redirection #}
+        <div style="flex: 0.3; background-color: #36489e; color: #FFFFFF; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h2 style="color: #FFFFFF; margin-bottom: 15px;">Member Access</h2>
+            <p style="color: #EEEEEE; margin-bottom: 30px;">Already have an account? Log in now.</p>
+            <a href="{% url 'login' %}" class="btn-secondary" style="background-color: #FFFFFF; color: #36489e; padding: 12px 25px; border: none;">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </a>
+        </div>
+    </div>
+{% endblock %}
