@@ -1,0 +1,33 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# Django-specific files
+*.log
+*.pot
+*.pyc
+*.pyo
+
+# Django Database and Media (Files you want ignored)
+*.sqlite3
+db.sqlite3     # Explicitly ignore the database file
+media/         # Explicitly ignore the media folder
+
+# Static files
+staticfiles/
+static_root/
+
+# Environment variables
+.env
+*.env
+env/
+
+# IDE settings
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
