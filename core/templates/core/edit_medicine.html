@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Edit {{ medicine.name }}{% endblock %}
+
+{% block content %}
+    <div class="left-panel" style="flex: 0.3; background-color: #f7f9fa; padding: 20px;">
+        <h3 style="color: #dc3545; margin-bottom: 20px;">Current Stock</h3>
+        <h1 style="color: #36489e; font-size: 3em;">{{ medicine.stock_quantity }}</h1>
+        <p style="color: #555;">Units available</p>
+        <a href="{% url 'medicine_stock' %}" class="btn-secondary" style="width: 100%; margin-top: 30px;">
+            <i class="fas fa-arrow-left"></i> Back to Stock List
+        </a>
+    </div>
+
+    <div class="right-panel" style="flex: 0.7; background-color: #FFFFFF; color: #36489e; text-align: left; padding: 40px; justify-content: start;">
+        <h2>Edit: {{ medicine.name }}</h2>
+        <form method="post" action="{% url 'edit_medicine' medicine_id=medicine.id %}" style="width: 100%; max-width: 500px; margin-top: 20px;">
+            {% csrf_token %}
+            
+            <label for="stock" style="font-weight: bold; margin-bottom: 5px; display: block;">New Stock Quantity:</label>
+            <input type="number" id="stock" name="stock_quantity" value="{{ medicine.stock_quantity }}" required style="margin-bottom: 15px;">
+            
+            <label for="price" style="font-weight: bold; margin-bottom: 5px; display: block;">Unit Price (P):</label>
+            <input type="number" id="price" name="price" value="{{ medicine.price|floatformat:2 }}" step="0.01" required style="margin-bottom: 15px;">
+            
+            <label for="description" style="font-weight: bold; margin-bottom: 5px; display: block;">Description:</label>
+            <textarea id="description" name="description" rows="5" style="margin-bottom: 25px;">{{ medicine.description|default:"" }}</textarea>
+            
+            <button type="submit" class="btn" style="width: 100%; background-color: #28a745; color: #FFFFFF; padding: 12px;">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </form>
+    </div>
+{% endblock %}

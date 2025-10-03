@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 650px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: flex-start;">
+
+            <a href="{% url 'profile_view' %}" class="btn" style="
+                padding: 8px 10px;
+                margin-right: 15px;
+                background-color: #f7f9fa;
+                color: #36489e;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            ">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 style="font-size: 1.5em; color: #36489e;">Submit Feedback</h1>
+        </header>
+
+        {# MAIN FORM CONTENT #}
+        <main style="padding: 40px; text-align: left;">
+            <p style="color: #555; margin-bottom: 30px;">
+                Use this form to report bugs, suggest features, or share your overall experience with MediServe.
+            </p>
+
+            <form method="post" action="{% url 'feedback' %}" style="width: 100%;">
+                {% csrf_token %}
+
+                <label for="subject" style="font-weight: bold; margin-bottom: 5px; display: block; color: #36489e;">Subject:</label>
+                <input type="text" id="subject" name="subject" placeholder="e.g., App Bug, Feature Request" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
+
+                <label for="details" style="font-weight: bold; margin-bottom: 5px; display: block; color: #36489e;">Details:</label>
+                <textarea id="details" name="details" rows="8" placeholder="Please describe your feedback in detail..." required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 30px;"></textarea>
+
+                <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 15px; font-size: 1.1em;">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+        </main>
+    </div>
+{% endblock %}

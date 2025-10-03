@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Order Queue Status{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 600px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: flex-start;">
+            <a href="{% url 'main_menu' %}" class="btn" style="
+                padding: 8px 10px;
+                margin-right: 15px;
+                background-color: #f7f9fa;
+                color: #36489e;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            ">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 style="font-size: 1.5em; color: #36489e;">Queue Status</h1>
+        </header>
+
+        {# MAIN QUEUE CONTENT #}
+        <main style="padding: 40px;">
+
+            {% if current_order %}
+
+                <h2 style="color: #36489e; margin-bottom: 5px;">Your Queue Number</h2>
+                <div style="background-color: #36489e; color: #FFFFFF; padding: 20px; border-radius: 10px; margin-bottom: 10px;">
+                    <h1 style="font-size: 4em; margin: 0; color: #FFFFFF;">#{{ current_number }}</h1>
+                </div>
+                <p style="font-size: 1.1em; color: #777; margin-bottom: 25px;">
+                    Currently Serving: <strong style="color: #dc3545;">#{{ currently_serving }}</strong>
+                </p>
+
+                {# ESTIMATED WAIT TIME & STATUS #}
+                <div style="border: 1個solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 30px;">
+                    <p style="font-weight: bold; margin: 0; color: #36489e;">Estimated Wait Time</p>
+                    <strong style="font-size: 1.8em; color: #28a745; display: block; margin-top: 5px;">
+                        {{ estimated_wait|default:"20 minutes" }}
+                    </strong>
+                    <p style="font-size: 0.9em; color: #777; margin-top: 10px;">
+                        Status: <span style="font-weight: bold;">{{ current_order.status }}</span>
+                    </p>
+                </div>
+
+                {# ORDER ITEMS SUMMARY #}
+                <div style="text-align: left; margin-bottom: 40px;">
+                    <h3 style="margin-bottom: 10px; color: #36489e;">Your Order Items:</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        {% for item in current_order.items.all %}
+                            <li style="padding: 10px 0; border-bottom: 1px dotted #ddd; display: flex; justify-content: space-between;">
+                                <span>{{ item.medicine.name }}</span>
+                                <strong>Quantity: {{ item.quantity }}</strong>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {# CANCEL ORDER BUTTON #}
+                <button class="btn" style="width: 100%; background-color: #dc3545; color: #FFFFFF; padding: 15px; font-size: 1.1em; cursor: not-allowed;">
+                    <i class="fas fa-ban"></i> Cancel Order
+                </button>
+
+                {# NEW: NAVIGATION BUTTON ADDED HERE #}
+                <a href="{% url 'main_menu' %}" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 15px; font-size: 1.1em; margin-top: 15px;">
+                    <i class="fas fa-home"></i> Return to Main Menu
+                </a>
+
+            {% else %}
+                <p style="text-align: center; padding: 30px;">You do not have an active order in the queue.</p>
+                <a href="{% url 'medicine_list' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 12px 25px;">
+                    <i class="fas fa-prescription-bottle-alt"></i> Browse Medicines
+                </a>
+            {% endif %}
+
+        </main>
+    </div>
+{% endblock %}

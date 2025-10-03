@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Medicine Records{% endblock %}
+
+{% block content %}
+    <div class="left-panel" style="flex: 0.3; background-color: #f7f9fa; padding: 20px;">
+        <h3 style="color: #dc3545; margin-bottom: 20px;">Filters</h3>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #ffc107; color: #333; cursor: not-allowed;">
+            <i class="fas fa-filter"></i> Filter by Action
+        </button>
+        <a href="{% url 'admin_menu' %}" class="btn-secondary" style="width: 100%; margin-top: 20px;">
+            <i class="fas fa-arrow-left"></i> Back to Admin Menu
+        </a>
+    </div>
+
+    <div class="right-panel" style="flex: 0.7; background-color: #FFFFFF; color: #36489e; text-align: left; padding: 40px; justify-content: start;">
+        <h2>Medicine Transaction Records</h2>
+        <p style="color: #555; margin-bottom: 20px;">A log of all inventory and price changes.</p>
+
+        <div class="records-list-view" style="max-height: 70vh; overflow-y: auto; width: 100%; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+            {% for record in records %}
+                <div class="admin-item-row" style="border-bottom: 1px solid #eee; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; position: relative;">
+                    <div style="flex-grow: 1;">
+                        <strong style="font-size: 1.1em;">{{ record.action }} - {{ record.medicine }}</strong>
+                        <br>
+                        <small style="color: #777;">Date: {{ record.date }} | Qty/Change:
+                            {% if record.qty %}
+                                +{{ record.qty }}
+                            {% elif record.old and record.new %}
+                                P{{ record.old }} &rarr; P{{ record.new }}
+                            {% endif %}
+                        </small>
+                    </div>
+
+                    <button class="btn-secondary" style="background-color: #36489e; color: #FFFFFF; padding: 8px 15px; cursor: not-allowed;">
+                        <i class="fas fa-eye"></i> View Log
+                    </button>
+
+                    <div class="admin-action-hover" style="right: 150px; top: 15px;">
+                        <small>Logged by: Admin User</small><br>
+                        <small>Transaction ID: {{ record.id }}</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p style="text-align: center; padding: 20px;">No transaction records found.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

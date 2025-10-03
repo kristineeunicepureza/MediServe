@@ -1,0 +1,167 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Main Menu{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); overflow: hidden;">
+
+        {# TOP HEADER BAR #}
+        <header style="padding: 15px 40px; background-color: #FFFFFF; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+
+            <div style="display: flex; align-items: center;">
+                <img src="{% static 'core/img/MediServe.png' %}" alt="MediServe Logo" style="width: 100px; height: 40px; margin-right: 10px;">
+                <div>
+                    <h1 style="font-size: 1.4em; color: #36489e; margin: 0;">MediServe</h1>
+                    <p style="font-size: 0.8em; color: #555; margin: 0; line-height: 1;">Community Health Partner</p>
+                </div>
+            </div>
+
+            {# LOGOUT BUTTON at Top Right #}
+            <a href="{% url 'logout' %}" class="btn-secondary" style="
+                background-color: #FFFFFF;
+                color: #36489e;
+                border: 1px solid #ddd;
+                padding: 8px 15px;
+                font-weight: 500;
+            ">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </header>
+
+        {# MAIN CONTENT AREA #}
+        <div style="padding: 40px; background-color: #f7f9fa;">
+
+            <h1 style="color: #36489e; font-size: 2.2em; margin-bottom: 5px;">Welcome Back!</h1>
+            <p style="color: #555; font-size: 1.1em; margin-bottom: 40px;">What would you like to do today?</p>
+
+            {# ACTION BUTTON GRID (3x2 Layout) #}
+            <div class="menu-options" style="
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                width: 100%;
+            ">
+
+                {# VIEW PROFILE BUTTON #}
+                <button onclick="toggleProfileSidebar(true)" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-user-circle"></i> View Profile
+                </button>
+
+                {# BROWSE MEDICINES BUTTON #}
+                <a href="{% url 'medicine_list' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-prescription-bottle-alt"></i> Browse Medicines
+                </a>
+
+                {# VIEW CURRENT ORDER BUTTON #}
+                <a href="{% url 'order_list' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-shopping-cart"></i> View Current Order
+                </a>
+
+                {# VIEW ORDER HISTORY #}
+                <a href="{% url 'medicine_history' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-history"></i> View Order History
+                </a>
+
+                {# VIEW ANNOUNCEMENTS BUTTON #}
+                <a href="{% url 'announcements' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-bullhorn"></i> View Announcements
+                </a>
+
+                {# TRACK DELIVERY BUTTON #}
+                <a href="{% url 'delivery_page' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fas fa-truck"></i> Track Delivery
+                </a>
+            </div>
+
+            <h3 style="color: #36489e; font-size: 1.5em; margin-top: 40px; margin-bottom: 15px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px;">Recent Announcements</h3>
+
+            {# ANNOUNCEMENTS AREA #}
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+                {# Announcement 1: Stock Available #}
+                <div style="background-color: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 5px solid #dc3545; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <strong style="font-size: 1em; color: #dc3545;">New Medicine Stock Available</strong>
+                    <p style="font-size: 0.9em; color: #555; margin-top: 5px;">Fresh supply of essential medicines now available. (Posted 2 hours ago)</p>
+                </div>
+
+                {# Announcement 2: Health Campaign #}
+                <div style="background-color: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 5px solid #36489e; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <strong style="font-size: 1em; color: #36489e;">Health Awareness Campaign</strong>
+                    <p style="font-size: 0.9em; color: #555; margin-top: 5px;">Join our community health program this weekend. Free health checkups available. (Posted 1 day ago)</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {# PROFILE MENU SIDEBAR - MODIFIED FOR DYNAMIC USER INFO #}
+    <div id="profile-sidebar" style="position: fixed; top: 0; right: 0; height: 100%; width: 0; background-color: #FFFFFF; box-shadow: -4px 0 10px rgba(0,0,0,0.15); z-index: 1000; overflow-x: hidden; transition: 0.3s; padding-left: 0;">
+        <div style="padding: 20px; width: 260px;">
+            <button onclick="toggleProfileSidebar(false)" style="position: absolute; top: 10px; right: 25px; font-size: 30px; border: none; background: none; color: #36489e; cursor: pointer;">&times;</button>
+            <h3 style="color: #36489e; margin-bottom: 30px; padding-top: 20px;">Profile Menu</h3>
+
+            <div style="text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                <i class="fas fa-user-circle" style="font-size: 2.5em; color: #36489e;"></i>
+
+                {# DYNAMIC USER'S FULL NAME (Priority) #}
+                <p style="font-size: 1.1em; font-weight: bold; margin: 5px 0 0 0;">
+                    {{ user.first_name }} {{ user.last_name }}
+                </p>
+
+                {# DYNAMIC USERNAME (As secondary identifier) #}
+                <small style="color: #555;">@{{ user.username|default:'Guest' }}</small>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="{% url 'profile_view' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
+                    <i class="fas fa-user" style="margin-right: 10px;"></i> View/Edit Profile
+                </a>
+                <a href="{% url 'profile_view' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
+                    <i class="fas fa-file-alt" style="margin-right: 10px;"></i> View Documents
+                </a>
+                <a href="{% url 'medicine_history' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
+                    <i class="fas fa-history" style="margin-right: 10px;"></i> Order History
+                </a>
+                <a href="{% url 'settings' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
+                    <i class="fas fa-cog" style="margin-right: 10px;"></i> Settings
+                </a>
+                <a href="{% url 'feedback' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
+                    <i class="fas fa-comment-dots" style="margin-right: 10px;"></i> Feedback
+                </a>
+            </div>
+
+            <a href="{% url 'logout' %}" class="btn" style="width: 100%; margin-top: 40px; background-color: #dc3545; color: #FFFFFF;">
+                <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleProfileSidebar(show) {
+            const sidebar = document.getElementById('profile-sidebar');
+            const openWidth = '300px';
+
+            if (show) {
+                sidebar.style.width = openWidth;
+                sidebar.style.paddingLeft = '20px';
+            } else {
+                sidebar.style.width = '0';
+                sidebar.style.paddingLeft = '0';
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('profile-sidebar');
+            const profileButton = document.querySelector('.menu-options button:first-child');
+
+            if (sidebar.style.width !== '0px' &&
+                !sidebar.contains(event.target) &&
+                !profileButton.contains(event.target)) {
+
+                toggleProfileSidebar(false);
+            }
+        });
+    </script>
+{% endblock %}

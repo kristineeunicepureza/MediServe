@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Current Order{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 800px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR (Adjusted for Order Page) #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center;">
+            <a href="{% url 'main_menu' %}" class="btn" style="
+                padding: 8px 10px;
+                margin-right: 15px;
+                background-color: #f7f9fa;
+                color: #36489e;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            ">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 style="font-size: 1.5em; color: #36489e;">Current Order</h1>
+        </header>
+
+        {# MAIN ORDER LIST CONTENT #}
+        <main style="padding: 30px;">
+            <div class="order-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+                {% for item in items %}
+                    <div class="order-item" style="
+                        background-color: #f7f9fa;
+                        padding: 15px;
+                        border-radius: 8px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border: 1px solid #e0e0e0;
+                    ">
+
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-capsules" style="color: #36489e; margin-right: 10px;"></i>
+                                <strong style="font-size: 1.1em; color: #333;">{{ item.medicine.name }}</strong>
+                            </div>
+
+                            <p style="font-size: 0.9em; color: #555; margin: 5px 0 0 25px;">
+                                Quantity: {{ item.quantity }} × ₱{{ item.medicine.price|floatformat:2 }}
+                            </p>
+
+                            {% if item.special_request %}
+                                <p style="font-size: 0.9em; color: #5c74e3; margin: 5px 0 0 25px;">
+                                    Note: {{ item.special_request }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <strong style="font-size: 1.1em; color: #36489e;">
+                                ₱{{ item.get_total_price|floatformat:2 }}
+                            </strong>
+
+                            <form action="{% url 'remove_order_item' item_id=item.id %}" method="post" style="margin: 0;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
+                        No items in your current order. <a href="{% url 'medicine_list' %}" style="color: #36489e;">Start browsing?</a>
+                    </p>
+                {% endfor %}
+            </div>
+
+            {# TOTAL AMOUNT AND SUBMIT BUTTON #}
+            {% if items|length > 0 %}
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd; text-align: right;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 400px; margin-left: auto;">
+                        <strong style="font-size: 1.3em;">Total Amount</strong>
+                        <strong style="font-size: 1.3em; color: #36489e;">₱{{ total|floatformat:2 }}</strong>
+                    </div>
+
+                    <form action="{% url 'order_checkout' %}" method="get" style="margin-top: 20px;">
+                        <button type="submit" class="btn" style="width: 100%; max-width: 400px; background-color: #5c74e3; color: #FFFFFF; padding: 15px; font-size: 1.1em;">
+                            Submit Order
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+
+        </main>
+    </div>
+{% endblock %}

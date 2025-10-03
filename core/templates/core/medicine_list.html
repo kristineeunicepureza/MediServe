@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Browse Medicines{% endblock %}
+
+{% block content %}
+
+    <div style="width: 90%; max-width: 1200px; margin: 30px auto; background-color: #FFFFFF; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+
+        <!-- Header and Search/Filter Bar -->
+        <header style="padding: 25px 35px; border-bottom: 1px solid #ddd;">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+
+                <!-- Back Button (Circular Arrow) -->
+                <a href="{% url 'main_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #e6e9f0;
+                    color: #36489e;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+
+                <h1 style="font-size: 1.6em; font-weight: bold; color: #36489e;">Browse Medicine</h1>
+
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div style="display: flex; gap: 15px;">
+                <div style="position: relative; flex-grow: 1;">
+                    <input type="text" id="search-input" onkeyup="filterMedicines(this.value)" placeholder="Search medicines..."
+                           style="width: 100%; padding: 12px 40px 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"/>
+                    <i class="fas fa-search" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+                </div>
+
+                <button class="btn" style="background-color: #FFFFFF; color: #36489e; border: 1px solid #36489e; padding: 12px 25px; border-radius: 8px; font-weight: normal; min-width: 120px;">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </header>
+
+        <!-- Product Grid -->
+        <main style="padding: 35px;">
+            <div id="medicine-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+
+                {% for medicine in medicines %}
+                    <div class="medicine-card" data-name="{{ medicine.name|lower }}"
+                         style="background-color: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer;">
+
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex-grow: 1;">
+                                <h3 style="font-size: 1.1em; font-weight: 600; color: #333; margin-bottom: 3px;">{{ medicine.name }} ({{ medicine.dosage }})</h3>
+                                <p style="font-size: 0.85em; color: #777; margin: 0;">{{ medicine.category }}</p>
+                            </div>
+                            <span style="font-size: 1.2em; font-weight: bold; color: #36489e; flex-shrink: 0;">₱{{ medicine.price|floatformat:2 }}</span>
+                        </div>
+
+                        <div style="display: flex; align-items: center; margin: 10px 0;">
+                            <!-- Icon -->
+                            <div style="height: 30px; width: 30px; border-radius: 50%; background-color: #36489e1a; display: flex; justify-content: center; align-items: center; margin-right: 15px;">
+                                <i class="fas fa-prescription-bottle" style="font-size: 1.1em; color: #36489e;"></i>
+                            </div>
+
+                            <!-- Stock Status Badge -->
+                            {% with stock=medicine.stock_quantity %}
+                                <span style="padding: 4px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold;
+                                    background-color: {% if stock > 10 %}#28a745{% elif stock > 0 %}#ffc107{% else %}#dc3545{% endif %};
+                                    color: {% if stock > 10 %}#FFFFFF{% elif stock > 0 %}#333{% else %}#FFFFFF{% endif %};">
+                                    {% if stock > 10 %}In Stock{% elif stock > 0 %}Low Stock{% else %}Out of Stock{% endif %}
+                                </span>
+                            {% endwith %}
+                        </div>
+
+                        <a href="{% url 'medicine_info' medicine_id=medicine.id %}" style="text-decoration: none;">
+                            <button type="button"
+                                    {% if medicine.stock_quantity == 0 %}disabled{% endif %}
+                                    style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px; border-radius: 8px; border: none; font-size: 1em; margin-top: 10px; cursor: pointer; opacity: {% if medicine.stock_quantity == 0 %}0.5{% else %}1{% endif %};">
+                                <i class="fas fa-cart-plus"></i> Add to Order
+                            </button>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; padding: 40px; width: 100%; color: #777; font-size: 1.2em;">
+                        The catalog is currently empty. No medicines are available.
+                    </p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function filterMedicines(query) {
+            const searchQuery = query.toLowerCase();
+            const cards = document.querySelectorAll('.medicine-card');
+            cards.forEach(card => {
+                const medicineName = card.getAttribute('data-name');
+                if (medicineName && medicineName.includes(searchQuery)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Medicine Info: {{ medicine.name }}{% endblock %}
+
+{% block content %}
+    <div class="split-container">
+        <div class="left-panel" style="flex: 0.5; background-color: #f7f9fa; padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start;">
+
+            <a href="{% url 'medicine_list' %}" class="btn" style="
+                padding: 8px 10px;
+                margin-bottom: 30px;
+                background-color: #e6e9f0;
+                color: #36489e;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #ddd;
+                text-decoration: none;
+                align-self: flex-start; /* Ensures the button aligns to the start/left */
+            ">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+
+            <h3 style="color: #36489e; margin-bottom: 20px;"></h3>
+
+            <div class="image-viewer" style="width: 100%; height: 90%; min-height: 300px; background-color: #eee; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; border-radius: 8px; margin-bottom: 10px;">
+                <img src="{% static 'core/img/Medicine Imagee.png' %}" alt="{{ medicine.name }} Image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            <p style="text-align: center; color: #555;">Enlarged view</p>
+        </div>
+
+        <div class="right-panel" style="flex: 0.5; background-color: #FFFFFF; color: #36489e; text-align: left; padding: 40px; display: flex; flex-direction: column; overflow-y: auto;">
+
+            <h2 style="margin-bottom: 5px;">{{ medicine.name }}</h2>
+            <p style="color: #555; font-size: 1.1em; margin-bottom: 20px;">{{ medicine.dosage }} | {{ medicine.formulation }}</p>
+
+            <strong style="font-size: 2em; color: #dc3545; margin-bottom: 15px;">P{{ medicine.price|floatformat:2 }} / unit</strong>
+
+            <p style="margin-bottom: 20px;">
+                <strong>Description:</strong> {{ medicine.description|default:"No description provided." }}
+            </p>
+
+            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 30px;">
+                <p style="margin: 0;">
+                    <strong>Current Stock:</strong>
+                    <span style="font-weight: bold; color: {% if medicine.stock_quantity > 10 %}#28a745{% else %}#dc3545{% endif %};">
+                        {{ medicine.stock_quantity }} units in stock
+                    </span>
+                    {% if medicine.stock_quantity == 0 %}
+                        <br><small style="color: #dc3545;">*This item is currently out of stock.*</small>
+                    {% endif %}
+                </p>
+            </div>
+
+            <form action="{% url 'add_to_order' medicine_id=medicine.id %}" method="post" style="width: 100%;">
+                {% csrf_token %}
+
+                <label for="amount" style="font-weight: bold; margin-bottom: 5px; display: block;">Quantity to Order:</label>
+                <input type="number" id="amount" name="amount" min="1" value="1" max="{{ medicine.stock_quantity }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
+
+                <label for="request" style="font-weight: bold; margin-bottom: 5px; display: block;">Special Request (Optional):</label>
+                <textarea id="request" name="special_request" rows="3" placeholder="e.g., Request specific brand or note for delivery." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 25px;"></textarea>
+
+                <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px 0;">
+                    <i class="fas fa-cart-plus"></i> Add to Order
+                </button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

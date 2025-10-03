@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}My Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 800px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: flex-start;">
+
+            <div style="display: flex; align-items: center;">
+                {# MODIFIED: Circular arrow icon now stands alone #}
+                <a href="{% url 'main_menu' %}" class="btn" style="
+                    padding: 8px 10px;
+                    margin-right: 15px;
+                    background-color: #f7f9fa;
+                    color: #36489e;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #ddd;
+                    box-shadow: none;
+                ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 style="font-size: 1.5em; color: #36489e;">Profile Information</h1>
+            </div>
+
+        </header>
+
+        {# MAIN CONTENT/FORM AREA #}
+        <main style="padding: 40px;">
+
+            <div style="text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                <i class="fas fa-user-circle" style="font-size: 3em; color: #36489e;"></i>
+                <h2 style="font-size: 1.8em; margin: 10px 0 5px 0; color: #36489e;">{{ profile.first_name }} {{ profile.last_name }}</h2>
+                <p style="color: #777; margin: 0;">Username: @{{ user.username }}</p>
+                <p style="font-size: 1em; margin-top: 10px; font-weight: bold; color: #28a745;">
+                    Status: {% if profile.is_senior %}Senior Citizen{% elif profile.is_pwd %}PWD{% else %}Regular User{% endif %}
+                </p>
+            </div>
+
+            <h3 style="color: #36489e; margin-bottom: 20px;">Edit Personal Details</h3>
+
+            <form method="post" style="width: 100%;">
+                {% csrf_token %}
+
+                {# FORM GRID - Personal Info #}
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 0.5fr; gap: 20px; margin-bottom: 30px;">
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">First Name:</label>
+                        <input type="text" name="first_name" value="{{ profile.first_name }}" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Last Name:</label>
+                        <input type="text" name="last_name" value="{{ profile.last_name }}" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">M.I.:</label>
+                        <input type="text" name="middle_initial" value="{{ profile.middle_initial|default:"" }}" maxlength="1" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+
+                {# FORM GRID - Demographics #}
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Birth:</label>
+                        <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Sex:</label>
+                        <select name="sex" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="Male" {% if profile.sex == 'Male' %}selected="selected"{% endif %}>Male</option>
+                            <option value="Female" {% if profile.sex == 'Female' %}selected="selected"{% endif %}>Female</option>
+                            <option value="Other" {% if profile.sex == 'Other' %}selected="selected"{% endif %}>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 15px; font-size: 1.1em; margin-bottom: 10px;">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+
+                {# ADDED: New button for navigation to other profile features #}
+                <a href="{% url 'settings' %}" class="btn" style="width: 95%; background-color: #f7f9fa; color: #36489e; padding: 15px; font-size: 1.1em; border: 1px solid #ddd;">
+                    <i class="fas fa-cog"></i> More Account Options
+                </a>
+            </form>
+
+            <p style="font-size: 0.8em; color: #888; margin-top: 20px; text-align: center;">*Note: Username cannot be changed here. Discount status requires admin verification.*</p>
+
+        </main>
+    </div>
+{% endblock %}

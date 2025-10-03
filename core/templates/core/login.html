@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block title %}User Login{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 800px; margin: 0 auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); display: flex; overflow: hidden; min-height: 500px;">
+
+        {# LEFT PANEL: Login Form #}
+        <div style="flex: 0.6; background-color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h2 style="color: #36489e; margin-bottom: 20px;">User Login</h2>
+
+            {# ADDED: Django Messages Display Area (for login errors) #}
+            {% if messages %}
+                <ul style="list-style: none; padding: 0; width: 100%; max-width: 300px; margin-bottom: 20px;">
+                    {% for message in messages %}
+                        <li style="padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;
+                            {% if 'error' in message.tags %}background-color: #ffe6e6; color: #dc3545; border: 1px solid #dc3545;
+                            {% else %}background-color: #f7f9fa; color: #333; border: 1px solid #ddd;{% endif %}"
+                        >
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form method="post" style="width: 100%; max-width: 300px;">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required style="margin-bottom: 10px;">
+                <input type="password" name="password" placeholder="Password" required style="margin-bottom: 20px;">
+
+                <button class="btn" type="submit" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px 0;">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </button>
+            </form>
+        </div>
+
+        {# RIGHT PANEL: Sign Up Redirection #}
+        <div style="flex: 0.4; background-color: #36489e; color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h2 style="color: #FFFFFF; margin-bottom: 15px;">New to MediServe?</h2>
+            <p style="color: #EEEEEE; margin-bottom: 30px;">Enter your personal details to get started with our system.</p>
+            <a href="{% url 'signup' %}" class="btn-secondary" style="background-color: #FFFFFF; color: #36489e; padding: 12px 25px; border: none;">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
+        </div>
+    </div>
+{% endblock %}

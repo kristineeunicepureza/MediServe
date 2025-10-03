@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); overflow: hidden;">
+
+        {# HEADER BAR (Admin Red Theme) #}
+        <header style="padding: 15px 40px; background-color: #dc3545; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+
+            <h1 style="font-size: 1.6em; color: #FFFFFF; margin: 0;">ADMIN DASHBOARD</h1>
+
+            {# LOGOUT BUTTON at Top Right #}
+            <a href="{% url 'logout' %}" class="btn-secondary" style="
+                background-color: #FFFFFF;
+                color: #dc3545;
+                border: 1px solid #dc3545;
+                padding: 8px 15px;
+                font-weight: 500;
+            ">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </a>
+        </header>
+
+        {# MAIN CONTENT AREA #}
+        <div style="padding: 40px; background-color: #f7f9fa;">
+
+            <h2 style="color: #36489e; font-size: 1.8em; margin-bottom: 10px;">Welcome, Administrator</h2>
+            <p style="color: #555; font-size: 1.1em; margin-bottom: 30px;">Manage inventory, orders, and announcements.</p>
+
+            {# ANNOUNCEMENT PREVIEW #}
+            <div style="border: 2px solid #ffc107; padding: 15px; border-radius: 5px; background-color: #fff; margin-bottom: 40px;">
+                <strong style="color: #dc3545;">Latest Announcement:</strong>
+                <p style="font-size: 0.9em; color: #555; margin-top: 5px;">{{ recent_announcement }}</p>
+            </div>
+
+            {# ACTION BUTTON GRID (3x3 Layout) #}
+            <div class="menu-options" style="
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                width: 100%;
+            ">
+
+                {# 1. Manage Stock (FIXED LINK) #}
+                <a href="{% url 'medicine_stock' %}" class="btn" style="background-color: #ffc107; color: #333; padding: 15px 10px; font-size: 1em; font-weight: bold;">
+                    <i class="fas fa-box"></i> Manage Stock
+                </a>
+
+                {# 2. Orders for Delivery #}
+                <a href="{% url 'delivery_page' %}" class="btn" style="background-color: #ffc107; color: #333; padding: 15px 10px; font-size: 1em; font-weight: bold;">
+                    <i class="fas fa-truck"></i> Fulfill Orders
+                </a>
+
+                {# 3. Manage Announcements #}
+                <a href="{% url 'announcements' %}" class="btn" style="background-color: #ffc107; color: #333; padding: 15px 10px; font-size: 1em; font-weight: bold;">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+
+                {# 4. View Analytics (FIXED LINK) #}
+                <a href="{% url 'analytics' %}" class="btn" style="background-color: #dc3545; color: #FFFFFF; padding: 15px 10px; font-size: 1em;">
+                    <i class="fas fa-chart-line"></i> View Analytics
+                </a>
+
+                {# 5. Medicine Records (FIXED LINK) #}
+                <a href="{% url 'medicine_records' %}" class="btn" style="background-color: #dc3545; color: #FFFFFF; padding: 15px 10px; font-size: 1em;">
+                    <i class="fas fa-file-invoice"></i> Transaction Log
+                </a>
+
+                {# 6. Admin Profile #}
+                <a href="{% url 'profile_view' %}" class="btn" style="background-color: #dc3545; color: #FFFFFF; padding: 15px 10px; font-size: 1em;">
+                    <i class="fas fa-user-shield"></i> Admin Profile
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

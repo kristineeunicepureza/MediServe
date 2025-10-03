@@ -1,0 +1,93 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Confirm Order{% endblock %}
+
+{% block content %}
+
+    <div style="width: 100%; max-width: 800px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+        {# HEADER BAR #}
+        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center;">
+            <a href="{% url 'order_list' %}" class="btn" style="
+                padding: 8px 10px;
+                margin-right: 15px;
+                background-color: #f7f9fa;
+                color: #36489e;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            ">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 style="font-size: 1.5em; color: #36489e;">Final Order Review</h1>
+        </header>
+
+        {# MAIN REVIEW CONTENT #}
+        <main style="padding: 30px;">
+            <p style="color: #555; margin-bottom: 25px;">Please confirm the details of your order before submitting.</p>
+
+            <div class="review-items" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+                {% for item in items %}
+                    <div class="order-item" style="
+                        background-color: #f7f9fa;
+                        padding: 15px;
+                        border-radius: 8px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border: 1px solid #e0e0e0;
+                    ">
+
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-capsules" style="color: #36489e; margin-right: 10px;"></i>
+                                <strong style="font-size: 1.1em; color: #333;">{{ item.quantity }}x {{ item.medicine.name }}</strong>
+                            </div>
+
+                            <p style="font-size: 0.9em; color: #555; margin: 5px 0 0 25px;">
+                                Subtotal: ₱{{ item.get_total_price|floatformat:2 }}
+                            </p>
+
+                            {% if item.special_request %}
+                                <p style="font-size: 0.9em; color: #5c74e3; margin: 5px 0 0 25px;">
+                                    Note: {{ item.special_request }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        <strong style="font-size: 1.1em; color: #36489e;">
+                            ₱{{ item.get_total_price|floatformat:2 }}
+                        </strong>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# FINAL TOTAL AND CONFIRMATION SECTION #}
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <strong style="font-size: 1.5em;">Total Amount Due</strong>
+                    <strong style="font-size: 1.5em; color: #dc3545;">₱{{ order.total_price|floatformat:2 }}</strong>
+                </div>
+
+                <p style="font-size: 0.9em; color: #777; margin-bottom: 20px;">
+                    *By clicking confirm, stock will be deducted and your order will be placed into the processing queue.*
+                </p>
+
+                <form action="{% url 'process_order' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="width: 100%; background-color: #28a745; color: #FFFFFF; font-size: 1.1em; padding: 15px;">
+                        <i class="fas fa-clipboard-check"></i> Confirm & Submit Order
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+{% endblock %}
